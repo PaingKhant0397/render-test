@@ -1,4 +1,8 @@
+require('dotenv').config()
+
 const express = require('express');
+const mongoose = require('mongoose')
+const Note = require('./models/note')
 
 const app = express()
 app.use(express.json());
@@ -9,12 +13,13 @@ const cors = require('cors');
 app.use(cors())
 
 
-
 const morgan = require('morgan');
 morgan.token('post-data', (req, res) => {
   return JSON.stringify(req.body)
 })
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :post-data'))
+
+
 
 let notes = [
   {
@@ -40,7 +45,9 @@ app.get('/', (req, res) => {
 
 // get all notes
 app.get('/api/notes', (req, res) => {
-  res.json(notes)
+  Note.find({}).then(notes => {
+    res.json(notes)
+  })
 })
 
 
@@ -90,7 +97,7 @@ const unknownEndpoints = (req, res) => {
 app.use(unknownEndpoints)
 
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`)
 })
