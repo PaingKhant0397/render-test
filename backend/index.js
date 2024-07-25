@@ -1,6 +1,5 @@
 require('dotenv').config()
-console.log('sdf')
-clg
+console.log('home')
 const express = require('express');
 const mongoose = require('mongoose')
 const Note = require('./models/note')
