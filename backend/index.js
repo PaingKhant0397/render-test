@@ -1,5 +1,6 @@
 require('dotenv').config()
-
+console.log('word')
+cconsole.log('testasdf')
 const express = require('express');
 const mongoose = require('mongoose')
 const Note = require('./models/note')
