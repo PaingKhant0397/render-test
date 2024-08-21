@@ -54,12 +54,15 @@ app.get('/api/notes', (req, res) => {
 // get single note
 app.get('/api/notes/:id', (req, res) => {
   const id = req.params.id
-  const note = notes.find(note => note.id === id)
-  if (note) {
+  Note.findById(id).then(note => {
     res.json(note)
-  } else {
-    res.status(404).end()
-  }
+  })
+  // const note = notes.find(note => note.id === id)
+  // if (note) {
+  //   res.json(note)
+  // } else {
+  //   res.status(404).end()
+  // }
 })
 
 // delete note 
@@ -82,12 +85,22 @@ app.post('/api/notes', (req, res) => {
   if (!body.content) {
     return res.status(400).json({ error: "content is missing" })
   }
-  const note = {
-    "id": generateId(),
-    ...body
-  }
-  notes = notes.concat(note)
-  res.json(note)
+
+  const note = new Note({
+    content: body.content,
+    important: body.important || false,
+  })
+
+  note.save().then(savedNote => {
+    res.json(savedNote)
+  })
+
+  // const note = {
+  //   "id": generateId(),
+  //   ...body
+  // }
+  // notes = notes.concat(note)
+  // res.json(note)
 })
 
 // handle unknown endpoints 

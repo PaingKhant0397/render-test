@@ -1,10 +1,12 @@
-
-
+//import mongoose
 const mongoose = require('mongoose')
+
+//set mongoose options
 mongoose.set('strictQuery', false)
 
+// connect to mongodb database
 const url = process.env.MONGODB_URI;
-console.log('onnecting to', url)
+console.log('Connecting to', url)
 
 mongoose.connect(url)
   .then(result => {
@@ -14,11 +16,13 @@ mongoose.connect(url)
     console.log('error connecting to MongoDB', error.message)
   })
 
+// define the schema
 const noteSchema = new mongoose.Schema({
   content: String,
   important: Boolean,
 })
 
+// transform the output of id from object to string
 noteSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString()
