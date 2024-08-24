@@ -44,10 +44,12 @@ app.get('/', (req, res) => {
 });
 
 // get all notes
-app.get('/api/notes', (req, res) => {
-  Note.find({}).then(notes => {
-    res.json(notes)
-  })
+app.get('/api/notes', (req, res, next) => {
+  Note.find({})
+    .then(notes => {
+      res.json(notes)
+    })
+    .catch(error => next(error))
 })
 
 
@@ -74,10 +76,15 @@ app.get('/api/notes/:id', (req, res, next) => {
 })
 
 // delete note 
-app.delete('/api/notes/:id', (req, res) => {
+app.delete('/api/notes/:id', (req, res, next) => {
   const id = req.params.id
-  notes = notes.filter(note => note.id !== id)
-  res.status(204).end()
+  Note.findByIdAndDelete(id)
+    .then(result => {
+      res.status(204).end()
+    })
+    .catch(error => next(error))
+  // notes = notes.filter(note => note.id !== id)
+  // res.status(204).end()
 })
 
 const generateId = () => {
@@ -85,10 +92,23 @@ const generateId = () => {
   return String(Math.floor(Math.random() * max))
 }
 
+//Update note 
 
+app.put('/api/notes/:id', (req, res, next) => {
+  const { content, important } = request.body
 
+  Note.findByIdAndUpdate(
+    request.params.id,
+    { content, important },
+    { new: true, runValidators: true, context: 'query' }
+  )
+    .then(updatedNote => {
+      response.json(updatedNote)
+    })
+    .catch(error => next(error))
+})
 // add note 
-app.post('/api/notes', (req, res) => {
+app.post('/api/notes', (req, res, next) => {
   const body = req.body
   if (!body.content) {
     return res.status(400).json({ error: "content is missing" })
@@ -99,9 +119,11 @@ app.post('/api/notes', (req, res) => {
     important: body.important || false,
   })
 
-  note.save().then(savedNote => {
-    res.json(savedNote)
-  })
+  note.save()
+    .then(savedNote => {
+      res.json(savedNote)
+    })
+    .catch(error => next(error))
 
   // const note = {
   //   "id": generateId(),
@@ -122,6 +144,8 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
   }
 
   next(error)
