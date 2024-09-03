@@ -3,22 +3,6 @@
 // import mongoose
 const mongoose = require('mongoose')
 
-// set mongoose options
-mongoose.set('strictQuery', false)
-
-// connect to mongodb database
-const url = process.env.MONGODB_URI
-console.log('Connecting to', url)
-
-mongoose
-  .connect(url)
-  .then(result => {
-    console.log('connected to MongoDB')
-  })
-  .catch(error => {
-    console.log('error connecting to MongoDB', error.message)
-  })
-
 // define the schema
 const noteSchema = new mongoose.Schema({
   content: {
