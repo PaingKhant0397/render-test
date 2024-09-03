@@ -1,14 +1,17 @@
-//import mongoose
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-underscore-dangle */
+// import mongoose
 const mongoose = require('mongoose')
 
-//set mongoose options
+// set mongoose options
 mongoose.set('strictQuery', false)
 
 // connect to mongodb database
-const url = process.env.MONGODB_URI;
+const url = process.env.MONGODB_URI
 console.log('Connecting to', url)
 
-mongoose.connect(url)
+mongoose
+  .connect(url)
   .then(result => {
     console.log('connected to MongoDB')
   })
@@ -21,7 +24,7 @@ const noteSchema = new mongoose.Schema({
   content: {
     type: String,
     minLength: 5,
-    required: true
+    required: true,
   },
   important: Boolean,
 })
@@ -32,7 +35,7 @@ noteSchema.set('toJSON', {
     returnedObject.id = returnedObject._id.toString()
     delete returnedObject._id
     delete returnedObject.__v
-  }
+  },
 })
 
 module.exports = mongoose.model('Note', noteSchema)
