@@ -11,10 +11,7 @@ const requestLogger = (request, response, next) => {
 }
 
 // Middleware for logging
-// morgan.token('post-data', (req, res) => JSON.stringify(req.body))
-// morgan(
-//   ':method :url :status :res[content-length] - :response-time ms :post-data',
-// )
+
 // const requestLogger = morgan
 
 const unknownEndpoint = (request, response) => {
