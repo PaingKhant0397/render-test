@@ -1,4 +1,4 @@
-// const morgan = require('morgan')
+require('express-async-errors')
 const cors = require('cors')
 const express = require('express')
 const mongoose = require('mongoose')
@@ -8,6 +8,7 @@ const middleware = require('./utils/middleware')
 const logger = require('./utils/logger')
 
 const notesRouter = require('./controllers/notes')
+const usersRouter = require('./controllers/users')
 
 // Mongoose setup
 mongoose.set('strictQuery', false)
@@ -35,6 +36,9 @@ app.use(middleware.requestLogger) // log requests
 
 // Note Application Routes
 app.use('/api/notes', notesRouter)
+
+// User Application Routes
+app.use('/api/users', usersRouter)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
